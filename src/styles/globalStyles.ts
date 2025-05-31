@@ -9,7 +9,8 @@ export const globalStyles = StyleSheet.create({
   },
   text: {
     color: colors.gray100,
-    fontWeight: '400',
+    fontFamily: 'HostGrotesk_400Regular',
     lineHeight: 24,
+    fontSize: 16,
   },
 })
