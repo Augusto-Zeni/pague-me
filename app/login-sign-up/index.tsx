@@ -5,9 +5,9 @@ import { colors } from '@/src/styles/colors'
 import { globalStyles } from '@/src/styles/globalStyles'
 import { Image, ImageBackground } from 'expo-image'
 import { SignIn } from 'phosphor-react-native'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, Animated, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 interface LoginFormData {
   email: string
@@ -23,6 +23,12 @@ interface SignUpFormData {
 
 export default function Index() {
   const [isLogin, setIsLogin] = useState(true)
+  
+  // Valores de animação
+  const fadeAnim = useRef(new Animated.Value(1)).current
+  const slideAnim = useRef(new Animated.Value(0)).current
+  const logoFadeAnim = useRef(new Animated.Value(1)).current
+  const logoScaleAnim = useRef(new Animated.Value(1)).current
 
   // Form para Login
   const loginForm = useForm<LoginFormData>({
@@ -57,10 +63,61 @@ export default function Index() {
   }
 
   const toggleForm = () => {
-    setIsLogin(!isLogin)
+    // Anima a saída
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: -50,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(logoFadeAnim, {
+        toValue: 0.5,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(logoScaleAnim, {
+        toValue: 0.95,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Após a animação de saída, troca o formulário
+      setIsLogin(!isLogin)
+      loginForm.reset()
+      signUpForm.reset()
 
-    loginForm.reset()
-    signUpForm.reset()
+      // Reseta os valores de animação
+      slideAnim.setValue(50)
+      
+      // Anima a entrada
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(logoFadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(logoScaleAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start()
+    })
   }
 
   return (
@@ -70,19 +127,24 @@ export default function Index() {
     >
       <ImageBackground source={require('@/assets/images/background-login-sign-up.png')} style={globalStyles.container}>
         <View style={styles.container}>
-          <Image source={require('@/assets/images/logo-login-sign-up.png')} style={styles.logo} />
+          <Animated.View style={[styles.containerLogo, {
+            opacity: logoFadeAnim,
+            transform: [{ scale: logoScaleAnim }],
+          }]}>
+            <Image source={require('@/assets/images/logo-login-sign-up.png')} style={styles.logo} />
           
-          {isLogin ? (
             <Text style={styles.subtitle}>
-              bem vindo de volta!
+              {isLogin ? 'bem vindo de volta!' : 'cadastre-se agora'}
             </Text>
-          ) : (
-            <Text style={styles.subtitle}>
-              cadastre-se agora
-            </Text>
-          )}
-          
-          <View style={styles.formContainer}>
+          </Animated.View>
+
+          <Animated.View style={[
+            styles.formContainer,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateX: slideAnim }]
+            }
+          ]}>
             {isLogin ? (
               // Formulário de Login
               <View style={styles.form}>
@@ -292,7 +354,7 @@ export default function Index() {
 
               </View>
             )}
-          </View>
+          </Animated.View>
         </View>
       </ImageBackground>
     </ScrollView>
@@ -302,6 +364,11 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerLogo: {
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
