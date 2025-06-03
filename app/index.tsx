@@ -1,25 +1,37 @@
-import { colors } from '@/src/styles/colors.'
+import { Button } from '@/src/components/Button'
+import { Text } from '@/src/components/Text'
+import { colors } from '@/src/styles/colors'
 import { globalStyles } from '@/src/styles/globalStyles'
 import { Image, ImageBackground } from 'expo-image'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { StyleSheet, View } from 'react-native'
 
 export default function Index() {
+  const router = useRouter()
+
   return (
     <ImageBackground source={require('@/assets/images/background-home.png')} style={globalStyles.container}>
       <View
         style={[styles.container]}
       >
         <Image source={require('@/assets/images/logo-all-black.png')} style={styles.logo} />
-        <Text style={[globalStyles.text, styles.text]}>
+        <Text style={styles.text}>
           seu app  de despesas em grupo
         </Text>
-        <Text style={[globalStyles.text, styles.text]}>
+        <Text style={styles.text}>
           sem dor de cabeça
         </Text>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Vamos lá!</Text>
-          </TouchableOpacity>
+          <Button
+            onPress={() => router.navigate('/login-sign-up')}
+            style={styles.button}
+            disabled={false}
+            variant="primary"
+          >
+            <Text style={styles.buttonText}>
+              Vamos lá!
+            </Text>
+          </Button>
         </View>
       </View>
     </ImageBackground>
@@ -39,12 +51,8 @@ const styles = StyleSheet.create({
     width: 252,
   },
   buttonContainer: {
-    backgroundColor: 'transparent',
     width: 252,
     marginTop: 10,
-    borderWidth: 1,
-    borderRadius: 100,
-    borderColor: colors.black200,
   },
   buttonText: {
     color: colors.black200,
