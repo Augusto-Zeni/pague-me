@@ -1,3 +1,4 @@
+import { animateFormTransition, createLoginAnimations } from '@/src/animations/loginAnimations'
 import { Button } from '@/src/components/Button'
 import { Input } from '@/src/components/InputText'
 import { Text } from '@/src/components/Text'
@@ -25,10 +26,7 @@ export default function Index() {
   const [isLogin, setIsLogin] = useState(true)
   
   // Valores de animação
-  const fadeAnim = useRef(new Animated.Value(1)).current
-  const slideAnim = useRef(new Animated.Value(0)).current
-  const logoFadeAnim = useRef(new Animated.Value(1)).current
-  const logoScaleAnim = useRef(new Animated.Value(1)).current
+  const animations = useRef(createLoginAnimations()).current
 
   // Form para Login
   const loginForm = useForm<LoginFormData>({
@@ -63,73 +61,23 @@ export default function Index() {
   }
 
   const toggleForm = () => {
-    // Anima a saída
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: -50,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(logoFadeAnim, {
-        toValue: 0.5,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(logoScaleAnim, {
-        toValue: 0.95,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      // Após a animação de saída, troca o formulário
+    animateFormTransition(animations, () => {
       setIsLogin(!isLogin)
       loginForm.reset()
       signUpForm.reset()
-
-      // Reseta os valores de animação
-      slideAnim.setValue(50)
-      
-      // Anima a entrada
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(logoFadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(logoScaleAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start()
     })
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={{ flex: 1 }}
-      keyboardShouldPersistTaps="handled"
-    >
-      <ImageBackground source={require('@/assets/images/background-login-sign-up.png')} style={globalStyles.container}>
+    <ImageBackground source={require('@/assets/images/background-login-sign-up.png')} style={globalStyles.container}>
+      <ScrollView
+        contentContainerStyle={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
           <Animated.View style={[styles.containerLogo, {
-            opacity: logoFadeAnim,
-            transform: [{ scale: logoScaleAnim }],
+            opacity: animations.logoFadeAnim,
+            transform: [{ scale: animations.logoScaleAnim }],
           }]}>
             <Image source={require('@/assets/images/logo-login-sign-up.png')} style={styles.logo} />
           
@@ -141,8 +89,8 @@ export default function Index() {
           <Animated.View style={[
             styles.formContainer,
             {
-              opacity: fadeAnim,
-              transform: [{ translateX: slideAnim }]
+              opacity: animations.fadeAnim,
+              transform: [{ translateX: animations.slideAnim }]
             }
           ]}>
             {isLogin ? (
@@ -356,8 +304,8 @@ export default function Index() {
             )}
           </Animated.View>
         </View>
-      </ImageBackground>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   )
 }
 
