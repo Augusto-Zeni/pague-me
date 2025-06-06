@@ -5,6 +5,7 @@ import { Text } from '@/src/components/Text'
 import { colors } from '@/src/styles/colors'
 import { globalStyles } from '@/src/styles/globalStyles'
 import { Image, ImageBackground } from 'expo-image'
+import { useRouter } from 'expo-router'
 import { SignIn } from 'phosphor-react-native'
 import { useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -24,6 +25,8 @@ interface SignUpFormData {
 
 export default function Index() {
   const [isLogin, setIsLogin] = useState(true)
+
+  const router = useRouter()
   
   // Valores de animação
   const animations = useRef(createLoginAnimations()).current
@@ -49,6 +52,8 @@ export default function Index() {
   const onLoginSubmit = (data: LoginFormData) => {
     console.log('Login data:', data)
     Alert.alert('Login', `Email: ${data.email}`)
+
+    router.navigate('/home/dashboard')
   }
 
   const onSignUpSubmit = (data: SignUpFormData) => {
@@ -56,8 +61,11 @@ export default function Index() {
       Alert.alert('Erro', 'As senhas não coincidem')
       return
     }
+
     console.log('SignUp data:', data)
     Alert.alert('Cadastro', `Bem-vindo, ${data.name}!`)
+
+    router.navigate('/home/dashboard')
   }
 
   const toggleForm = () => {
