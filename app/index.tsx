@@ -1,3 +1,4 @@
+import { animateHomeScreen, createHomeAnimations } from '@/src/animations/homeAnimations'
 import { Button } from '@/src/components/Button'
 import { Text } from '@/src/components/Text'
 import { colors } from '@/src/styles/colors'
@@ -9,85 +10,25 @@ import { Animated, StyleSheet, View } from 'react-native'
 
 export default function Index() {
   const router = useRouter()
-  
-  // Criando valores de animação para cada elemento
-  const logoOpacity = useRef(new Animated.Value(0)).current
-  const firstTextOpacity = useRef(new Animated.Value(0)).current
-  const secondTextOpacity = useRef(new Animated.Value(0)).current
-  const buttonOpacity = useRef(new Animated.Value(0)).current
-
-  // Criando valores de animação para a translação
-  const logoTranslateX = useRef(new Animated.Value(-100)).current
-  const firstTextTranslateX = useRef(new Animated.Value(-100)).current
-  const secondTextTranslateX = useRef(new Animated.Value(-100)).current
-  const buttonTranslateX = useRef(new Animated.Value(-100)).current
+  const animations = useRef(createHomeAnimations()).current
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(logoOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(logoTranslateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(firstTextOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(firstTextTranslateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(secondTextOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(secondTextTranslateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.parallel([
-        Animated.timing(buttonOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(buttonTranslateX, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start()
+    animateHomeScreen(animations)
   }, [])
 
   return (
     <ImageBackground source={require('@/assets/images/background-home.png')} style={globalStyles.container}>
       <View style={[styles.container]}>
         <Animated.View style={{ 
-          opacity: logoOpacity,
-          transform: [{ translateX: logoTranslateX }]
+          opacity: animations.logoOpacity,
+          transform: [{ translateX: animations.logoTranslateX }]
         }}>
           <Image source={require('@/assets/images/logo-all-black.png')} style={styles.logo} />
         </Animated.View>
 
         <Animated.View style={{ 
-          opacity: firstTextOpacity,
-          transform: [{ translateX: firstTextTranslateX }]
+          opacity: animations.firstTextOpacity,
+          transform: [{ translateX: animations.firstTextTranslateX }]
         }}>
           <Text style={styles.text}>
             seu app de despesas em grupo
@@ -95,8 +36,8 @@ export default function Index() {
         </Animated.View>
 
         <Animated.View style={{ 
-          opacity: secondTextOpacity,
-          transform: [{ translateX: secondTextTranslateX }]
+          opacity: animations.secondTextOpacity,
+          transform: [{ translateX: animations.secondTextTranslateX }]
         }}>
           <Text style={styles.text}>
             sem dor de cabeça
@@ -106,8 +47,8 @@ export default function Index() {
         <Animated.View style={[
           styles.buttonContainer, 
           { 
-            opacity: buttonOpacity,
-            transform: [{ translateX: buttonTranslateX }]
+            opacity: animations.buttonOpacity,
+            transform: [{ translateX: animations.buttonTranslateX }]
           }
         ]}>
           <Button
