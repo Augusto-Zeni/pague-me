@@ -1,7 +1,7 @@
 import { colors } from '@/src/styles/colors'
-import { Tabs } from 'expo-router'
+import { Tabs, usePathname } from 'expo-router'
 import { Bell, CashRegister, House, Stack, User } from 'phosphor-react-native'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Animated, Dimensions, Platform, StyleSheet, View } from 'react-native'
 
 const { width, height } = Dimensions.get('window')
@@ -11,8 +11,17 @@ const TAB_HEIGHT = Platform.select({
   android: height * 0.1,
 })
 
+const routeToIndex: { [key: string]: number } = {
+  '/home/dashboard': 0,
+  '/home/groups': 1,
+  '/home/transactions': 2,
+  '/home/notifications': 3,
+  '/home/profile': 4,
+}
+
 export default function HomeLayout() {
   const animatedValue = useRef(new Animated.Value(0)).current
+  const pathname = usePathname()
 
   const handleTabPress = (index: number) => {
     Animated.spring(animatedValue, {
@@ -22,6 +31,11 @@ export default function HomeLayout() {
       friction: 7,
     }).start()
   }
+
+  useEffect(() => {
+    const currentIndex = routeToIndex[pathname] ?? 0
+    handleTabPress(currentIndex)
+  }, [pathname])
 
   return (
     <>
