@@ -1,3 +1,4 @@
+import { PopupMenu } from '@/src/components/PopupMenu/PopupMenu'
 import { Text } from '@/src/components/Text'
 import { TransactionCard } from '@/src/components/TransactionCard'
 import { colors } from '@/src/styles/colors'
@@ -9,7 +10,21 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 export default function GroupDetails() {
   const { id } = useLocalSearchParams()
 
-  console.log(id)
+  const menuItemsGroup = [
+    {
+      label: 'Deletar',
+      value: 'delete',
+      onPress: () => alert('Deletado'),
+    }
+  ]
+
+  const menuItemsExpenses = [
+    {
+      label: 'Criar',
+      value: 'create',
+      onPress: () => alert('Criado'),
+    }
+  ]
 
   return (
     <SafeAreaView style={[globalStyles.container, styles.container]}>
@@ -17,7 +32,15 @@ export default function GroupDetails() {
         <View style={styles.content}>
           <View style={styles.headerContainer}>
             <Text style={styles.title}>Vagem Rio 2025</Text>
-            <DotsThreeVertical size={32} color={colors.gray100} />
+
+            <PopupMenu
+              icon={<DotsThreeVertical size={32} color={colors.gray100} />}
+              options={menuItemsGroup}
+              menuStyles={{
+                optionsContainer: { padding: 8, backgroundColor: colors.black100, borderRadius: 12 },
+                optionText: { color: colors.gray100, fontSize: 16 },
+              }}
+            />
           </View>
 
           <View style={styles.conetentContainer}>
@@ -43,7 +66,15 @@ export default function GroupDetails() {
           <View style={styles.conetentContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.subtitle}>Despesas</Text>
-              <PlusCircle size={24} color={colors.gray100} />
+
+              <PopupMenu
+                icon={<PlusCircle size={24} color={colors.gray100} />}
+                options={menuItemsExpenses}
+                menuStyles={{
+                  optionsContainer: { paddingVertical: 8, backgroundColor: colors.black100, borderRadius: 12 },
+                  optionText: { color: colors.gray100, fontSize: 16 },
+                }}
+              />
             </View>
 
             <View>

@@ -1,3 +1,4 @@
+import { PopupMenu } from '@/src/components/PopupMenu/PopupMenu'
 import { Text } from '@/src/components/Text'
 import { TransactionCard } from '@/src/components/TransactionCard'
 import { colors } from '@/src/styles/colors'
@@ -8,6 +9,14 @@ import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
 
 export default function Groups() {
   const router = useRouter()
+
+  const menuItemsGroups = [
+    {
+      label: 'Criar Grupo',
+      value: 'create',
+      onPress: () => alert('Criado'),
+    }
+  ]
 
   const handlePressCard = (groupId: string) => {
     router.push({
@@ -22,7 +31,15 @@ export default function Groups() {
         <View style={styles.content}>
           <View style={styles.headerContainer}>
             <Text style={styles.title}>Grupos</Text>
-            <PlusCircle size={32} color={colors.gray100} />
+
+            <PopupMenu
+              icon={<PlusCircle size={32} color={colors.gray100} />}
+              options={menuItemsGroups}
+              menuStyles={{
+                optionsContainer: { paddingVertical: 8, backgroundColor: colors.black100, borderRadius: 12 },
+                optionText: { color: colors.gray100, fontSize: 16 },
+              }}
+            />
           </View>
 
           <View style={styles.cardsContainer}>
