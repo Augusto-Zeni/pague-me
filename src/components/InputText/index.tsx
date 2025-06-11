@@ -7,6 +7,7 @@ interface InputProps extends TextInputProps {
   label?: string
   error?: string
   variant?: 'primary' | 'secondary'
+  borderColor?: string
   containerStyle?: object
   inputStyle?: object
   labelStyle?: object
@@ -19,6 +20,7 @@ export const Input = forwardRef<TextInput, InputProps>(
       label,
       error,
       variant = 'primary',
+      borderColor,
       containerStyle,
       inputStyle,
       labelStyle,
@@ -27,6 +29,12 @@ export const Input = forwardRef<TextInput, InputProps>(
     },
     ref
   ) => {
+    const getBorderColor = () => {
+      if (error) return colors.red
+      if (borderColor) return borderColor
+      return colors.blue
+    }
+
     return (
       <View style={[styles.container, containerStyle]}>
         {label && (
@@ -38,7 +46,7 @@ export const Input = forwardRef<TextInput, InputProps>(
           ref={ref}
           style={[
             styles.input,
-            error && styles.inputError,
+            { borderColor: getBorderColor() },
             inputStyle,
           ]}
           placeholderTextColor={colors.gray400}
@@ -69,10 +77,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.black200,
     backgroundColor: 'transparent',
-    borderColor: colors.blue,
-  },
-  inputError: {
-    borderColor: colors.red,
   },
   error: {
     fontSize: 12,
