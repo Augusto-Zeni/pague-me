@@ -6,14 +6,16 @@ import { Text } from '../Text'
 interface TransactionCardProps {
   children: ReactNode
   value?: number
+  whiteValue?: boolean
+  onPress?: () => void
 }
 
-export function TransactionCard({children, value}: TransactionCardProps) {
+export function TransactionCard({children, value, whiteValue = false, onPress}: TransactionCardProps) {
   const hasValue = value !== undefined && value !== null
 
   const getValueColor = (value: number) => {
-    if (value < 0) return styles.negative
-    if (value > 0) return styles.positive
+    if (value < 0 && !whiteValue) return styles.negative
+    if (value > 0 && !whiteValue) return styles.positive
     return styles.neutral
   }
 
@@ -26,7 +28,7 @@ export function TransactionCard({children, value}: TransactionCardProps) {
   }
 
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={[styles.leftContainer, !hasValue && styles.fullWidth]}>
         {children}
       </View>
