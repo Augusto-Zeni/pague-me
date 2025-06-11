@@ -5,10 +5,11 @@ import { globalStyles } from '@/src/styles/globalStyles'
 import { useRouter } from 'expo-router'
 import { ArrowRight } from 'phosphor-react-native'
 import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
-import backgroundImage from '../../../assets/images/background-dashboard-card.png'
 
 export default function Dashboard() {
   const router = useRouter()
+
+  const mainCardBackgroundImage = require('../../../assets/images/background-dashboard-card.png')
 
   const handleClickShowMoreGroups = () => {
     router.push('/home/groups')
@@ -29,7 +30,7 @@ export default function Dashboard() {
             </View>
 
             {/* Main Card */}
-            <ImageBackground source={backgroundImage} style={styles.cardContainer}>
+            <ImageBackground source={mainCardBackgroundImage} style={styles.cardContainer}>
               <View style={styles.contenCard}>
                 <Text style={styles.titleContentCard}>saldo total</Text>
                 <Text style={styles.valueContentCard}>+ R$170,00</Text>
